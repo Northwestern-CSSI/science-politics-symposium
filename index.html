@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <!-- Northwestern web brand substitutes per brand tools: Poppins (headlines) + Noto Serif (body) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#4E2A84" />
+  <title>Symposium on Science & Politics — Kellogg, Northwestern</title>
+  <meta name="description" content="Symposium on Science and Politics at the Kellogg School of Management, Northwestern University. Agenda, speakers, and logistics for Oct 14–16." />
+  <style>
+    :root{ --brand:#4E2A84; --ink:#111827; --muted:#4b5563; --bg:#ffffff; --card:#f8fafc; --ring:#e5e7eb; }
+    @media (prefers-color-scheme: dark){ :root{ --bg:#0b0f17; --ink:#e5e7eb; --muted:#a3a3a3; --card:#0f172a; --ring:#1f2937; --brand:#4E2A84; } }
+    html{scroll-behavior:smooth}
+    body{margin:0;font:16px/1.6 "Noto Serif", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;background:var(--bg);color:var(--ink)}
+    h1,h2,h3,h4,h5,h6,.brand,nav a,button{font-family:"Poppins", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1000px;margin:auto;padding:0 1rem}
+
+    /* Header */
+    header{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--ring);z-index:50}
+    header::before{content:"";display:block;height:4px;background:var(--brand);}
+    .nav{display:flex;gap:1rem;align-items:center;justify-content:space-between;padding:1rem 0}
+    .brand-logos{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+    .brand-logos img{height:36px;max-width:260px;display:block}
+    nav ul{display:flex;gap:.75rem;list-style:none;margin:0;padding:0}
+    nav a{display:inline-block;padding:.5rem .75rem;border-radius:8px}
+    nav a:hover{background:var(--card)}
+
+    /* Hero */
+    .hero{padding:3.5rem 0 2rem;border-bottom:1px solid var(--ring)}
+    .hero h1{font-size:clamp(1.8rem,3.5vw,2.6rem);margin:.25rem 0}
+    .lead{color:var(--muted);max-width:65ch}
+    .meta{margin:1rem 0;display:flex;gap:1rem;flex-wrap:wrap}
+    .pill{background:var(--card);border:1px solid var(--ring);border-radius:999px;padding:.4rem .75rem}
+
+    /* Sections */
+    section{padding:2rem 0;border-bottom:1px solid var(--ring)}
+    section h2{font-size:1.4rem;margin:0 0 .75rem}
+
+    /* Tabs */
+    .tabs{border:1px solid var(--ring);border-radius:14px;overflow:hidden;background:var(--card)}
+    .tablist{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--ring)}
+    .tablist button{appearance:none;background:none;border:0;padding:.8rem 1rem;cursor:pointer}
+    .tablist button[aria-selected="true"]{border-bottom:3px solid var(--brand);font-weight:600}
+    .tabpanes > div{display:none;padding:1rem}
+    .tabpanes > div[data-active]{display:block}
+
+    /* Schedule slots */
+    .slot{display:grid;grid-template-columns:100px 1fr;gap:1rem;padding:.75rem;border-radius:12px;background:var(--bg);border:1px solid var(--ring);margin:.6rem 0}
+    .time{font-weight:600;color:var(--muted)}
+    .title{font-weight:700;margin:0}
+    .subtitle{margin:.2rem 0 .5rem;color:var(--muted)}
+    details{border:1px dashed var(--ring);border-radius:12px;padding:.6rem;background:var(--bg)}
+    details summary{cursor:pointer;font-weight:600}
+    .people{margin:.5rem 0 0;padding-left:1rem}
+
+    /* Speakers */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+    .card{border:1px solid var(--ring);border-radius:14px;background:var(--card);padding:1rem;text-align:center}
+    .card img{width:80px;height:80px;object-fit:cover;border-radius:50%;margin-bottom:.5rem;background:var(--ring)}
+    .card h3{margin:.2rem 0 .4rem;font-size:1rem}
+    .muted{color:var(--muted)}
+
+    /* Venue */
+    .venue{display:grid;gap:1rem;grid-template-columns:1.2fr .8fr}
+    @media (max-width:820px){.venue{grid-template-columns:1fr}}
+    .map{width:100%;aspect-ratio:4/3;border:1px solid var(--ring);border-radius:12px}
+
+    footer{padding:2rem 0;color:var(--muted)}
+    .tiny{font-size:.9rem}
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const list = document.querySelector('.tablist');
+      if(!list) return;
+      const buttons = Array.from(list.querySelectorAll('button'));
+      const panes = Array.from(document.querySelectorAll('.tabpanes > div'));
+      const activate = (id) => {
+        buttons.forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab===id)));
+        panes.forEach(p => { if(p.id===id){ p.setAttribute('data-active',''); } else { p.removeAttribute('data-active'); } });
+        if(history.replaceState) history.replaceState(null,'',`#${id}`);
+      };
+      list.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if(!btn) return;
+        activate(btn.dataset.tab);
+      });
+      const hash = location.hash.slice(1);
+      if(hash && document.getElementById(hash)) activate(hash); else activate('day-tue');
+    });
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <div class="brand-logos" aria-label="Event lockups">
+        <img src="assets/cssi-lockup.svg" alt="Center for Science of Science &amp; Innovation" />
+        <img src="assets/ryan-institute-lockup.svg" alt="Ryan Institute on Complexity" />
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#schedule">Schedule</a></li>
+          <li><a href="#speakers">Speakers</a></li>
+          <li><a href="#venue">Venue</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">Symposium on Science &amp; Politics</h1>
+      <p class="lead">Hosted by the Center for Science of Science &amp; Innovation (CSSI) and the Ryan Institute on Complexity.</p>
+      <div class="meta" role="list">
+        <span role="listitem" class="pill">Oct 14–16</span>
+        <span role="listitem" class="pill">Kellogg School of Management · Evanston, IL</span>
+        <span role="listitem" class="pill">In‑person • Informational hub</span>
+      </div>
+    </section>
+
+    <section id="about" aria-labelledby="about-h2">
+      <h2 id="about-h2">About</h2>
+      <p>A two‑day convening bringing together scholars, policymakers, and practitioners to examine how science shapes policymaking—and how politics shapes science. The program features research talks and discussion panels spanning evidence‑based policy, geopolitics, funding, open science, and public communication.</p>
+    </section>
+
+    <section id="schedule" aria-labelledby="schedule-h2">
+      <h2 id="schedule-h2">Schedule</h2>
+      <div class="tabs" role="tablist" aria-label="Days">
+        <div class="tablist">
+          <button role="tab" aria-selected="true" data-tab="day-tue">Tue Oct 14</button>
+          <button role="tab" aria-selected="false" data-tab="day-wed">Wed Oct 15</button>
+          <button role="tab" aria-selected="false" data-tab="day-thu">Thu Oct 16</button>
+        </div>
+        <div class="tabpanes">
+          <!-- Tuesday -->
+          <div id="day-tue" role="tabpanel">
+            <div class="slot"><div class="time">5:30–8:00</div><div><p class="title">Reception</p></div></div>
+          </div>
+
+          <!-- Wednesday (updated) -->
+          <div id="day-wed" role="tabpanel">
+            <div class="slot"><div class="time">8:00–8:45</div><div><p class="title">Breakfast</p></div></div>
+            <div class="slot"><div class="time">8:45–9:00</div><div><p class="title">Opening remarks</p></div></div>
+
+            <div class="slot"><div class="time">9:00–10:20</div><div><p class="title">Research Presentations 1</p><p class="subtitle">Four 20‑minute presentations</p>
+              <details><summary>View talks &amp; speakers</summary>
+                <ul class="people">
+                  <li><strong>The Effects of Training Politicians in Evidence‑Based Policymaking</strong> — Adam Zelizer, Assistant Professor, Harris School of Public Policy, University of Chicago</li>
+                  <li><strong>Public Sector Scientific Capacity: Keeping Pace with Genome Altering Technology at the FDA</strong> — Ann Keller, Associate Professor of Health Politics &amp; Policy, UC Berkeley School of Public Health</li>
+                  <li><strong>Scientists in Congress: Congressional Treatment of Expertise</strong> — Ju Yeon (Julia) Park, Associate Professor, The Ohio State University</li>
+                  <li><strong>The Policy Agenda of Social Science</strong> — E.J. Fagan, Associate Professor, University of Illinois at Chicago</li>
+                </ul>
+              </details>
+            </div></div>
+
+            <div class="slot"><div class="time">10:20–10:30</div><div><p class="title">Coffee + Snack</p></div></div>
+
+            <div class="slot"><div class="time">10:30–11:15</div><div><p class="title">Panel 1: Science &amp; Policymaking</p>
+              <details><summary>Speakers &amp; moderator</summary>
+                <ul class="people">
+                  <li>Paola Maynard‑Moll, Executive Director, Scholars Strategy Network</li>
+                  <li>David Goldston, Director, MIT Washington Office; former Chief of Staff, House Science Committee</li>
+                  <li>Toby Smith, Senior VP for Government Relations and Public Policy, American Association of Universities</li>
+                  <li>Arthur Lupia, Gerald R. Ford University Professor and Vice President for Research and Innovation, University of Michigan</li>
+                  <li><em>Moderator:</em> Ben Jones, Gordon and Llura Gund Family Professor of Entrepreneurship and Professor of Strategy, Kellogg</li>
+                </ul>
+              </details>
+            </div></div>
+
+            <div class="slot"><div class="time">11:15–12:00</div><div><p class="title">Panel 2: From Open Science to Gold Standard of Science</p>
+              <details><summary>Speakers &amp; moderator</summary>
+                <ul class="people">
+                  <li>Kei Koizumi, Former Principal Deputy Director for Policy, White House Office of Science and Technology Policy (OSTP)</li>
+                  <li>Stuart Buck, Executive Director, Good Science Project</li>
+                  <li>Brian Nosek, Co‑founder &amp; Executive Director, Center for Open Science; Professor, University of Virginia</li>
+                  <li><em>Moderator:</em> Arthur Lupia, Gerald R. Ford University Professor and Vice President for Research and Innovation, University of Michigan</li>
+                </ul>
+              </details>
+            </div></div>
+
+            <div class="slot"><div class="time">12:00–1:00</div><div><p class="title">Lunch</p></div></div>
+
+            <div class="slot"><div class="time">1:00–2:00</div><div><p class="title">Research Presentations 2</p><p class="subtitle">Three 20‑minute presentations</p>
+              <details><summary>View talks &amp; speakers</summary>
+                <ul class="people">
+                  <li><strong>The Historical Political Economy of the NIH</strong> — Bhavan Sampat, Professor, Johns Hopkins University</li>
+                  <li><strong>TBD</strong> — Erik Nisbet, Owen L. Coon Endowed Professor of Policy Analysis &amp; Communication; Director, Center for Communication &amp; Public Policy, Northwestern University</li>
+                  <li><strong>Political Polarization, Perceived Scientific Consensus, &amp; Scientific Authority</strong> — Elizabeth Suhay, Associate Professor, American University</li>
+                </ul>
+              </details>
+            </div></div>
+
+            <div class="slot"><div class="time">2:00–2:45</div><div><p class="title">Panel 3: The Politics of Science Funding</p>
+              <details><summary>Confirmed speakers &amp; moderator</summary>
+                <ul class="people">
+                  <li>Kaye Husbands Fealing, Assistant Director of NSF for SBE; former Dean, Ivan Allen College of Liberal Arts, Georgia Tech</li>
+                  <li>Daniel Goroff, Vice President, Alfred P. Sloan Foundation; former Director, Division of Social &amp; Economic Sciences, NSF</li>
+                  <li>Matt Clancy, Senior Program Officer for the Abundance and Growth Fund, Open Philanthropy</li>
+                  <li>Bhavan Sampat, Professor, Johns Hopkins University</li>
+                  <li><em>Moderator:</em> Dashun Wang</li>
+                </ul>
+              </details>
+            </div></div>
+
+            <div class="slot"><div class="time">2:45–3:30</div><div><p class="title">Panel 4: Science and Geopolitics</p>
+              <details><summary>Speakers &amp; moderator</summary>
+                <ul class="people">
+                  <li>Yasheng Huang, Professor of Global Economics and Management, MIT Sloan School of Management</li>
+                  <li>Molly Roberts, Professor of Political Science, UC San Diego</li>
+                  <li>Nancy Qian, Professor of Managerial Economics &amp; Decision Sciences, Kellogg School of Management, Northwestern University</li>
+                  <li>Jari H. Kuusisto, Visiting Scholar at MIT Sloan; Former President, University of Vaasa, Finland</li>
+                  <li><em>Moderator:</em> Pin Ni, President of Wanxiang America Corporation; Trustee, Northwestern University</li>
+                </ul>
+              </details>
+            </div></div>
+
+            <div class="slot"><div class="time">3:30–4:00</div><div><p class="title">Coffee + Snack</p></div></div>
+
+            <div class="slot"><div class="time">4:00–5:20</div><div><p class="title">Research Presentations 3</p><p class="subtitle">Four 20‑minute presentations</p>
+              <details><summary>View talks &amp; speakers</summary>
+                <ul class="people">
+                  <li><strong>Examining the Politicization of Science: When is a political influence legitimate?</strong> — Heather Douglas, Professor, Michigan State University</li>
+                  <li><strong>The Cultural Legitimacy of Science and Democracy</strong> — Gordon Gauchat, University of Wisconsin‑Milwaukee</li>
+                  <li><strong>Industries of Ideas: New measurement for a frontier at risk</strong> — Jason Owen Smith, Associate Vice President for Research‑Institutional Capabilities &amp; Research Intelligence; Professor, University of Michigan</li>
+                  <li><strong>TBD</strong> — Jevin West</li>
+                </ul>
+              </details>
+            </div></div>
+
+            <div class="slot"><div class="time">6:30–9:00</div><div><p class="title">Dinner</p><p class="subtitle">Evanston Corner Bistro</p></div></div>
+          </div>
+
+          <!-- Thursday -->
+          <div id="day-thu" role="tabpanel">
+            <div class="slot"><div class="time">8:00–9:00</div><div><p class="title">Breakfast</p></div></div>
+            <div class="slot"><div class="time">9:00–9:15</div><div><p class="title">Closing remarks</p></div></div>
+            <div class="slot"><div class="time">9:15–10:00</div><div><p class="title">Panel 5: Science and the Public</p>
+              <details><summary>Speakers &amp; moderator</summary>
+                <ul class="people">
+                  <li>Heather Douglas, Professor, Michigan State University</li>
+                  <li>Toby Smith, Vice President for Policy, Association of American Universities (AAU)</li>
+                  <li>Peter Schiffer, Dean for Research, Princeton University</li>
+                  <li>Jevin West, Associate Dean for Research, Information School, University of Washington</li>
+                  <li><em>Moderator:</em> Alexander Furnas</li>
+                </ul>
+              </details>
+            </div></div>
+            <div class="slot"><div class="time">10:00–10:30</div><div><p class="title">Coffee + Snack</p></div></div>
+            <div class="slot"><div class="time">10:30–11:30</div><div><p class="title">Research Presentations 4</p><p class="subtitle">Three 20‑minute presentations</p>
+              <details><summary>View talks &amp; speakers</summary>
+                <ul class="people">
+                  <li><strong>What drives a contemporary lack of trust in government and science in the United States?</strong> — Kristen Lunz Trujillo, Assistant Professor, Boston College</li>
+                  <li><strong>The Structure of Scientific Misinterpretation in Policy‑making</strong> — James Evans, Max Palevsky Professor; Director, Knowledge Lab, University of Chicago</li>
+                  <li><strong>Disagreement among friends: collaborative discussion on climate change polarization</strong> — Mary McGrath, Assistant Professor, Northwestern University</li>
+                </ul>
+              </details>
+            </div></div>
+            <div class="slot"><div class="time">11:30–12:15</div><div><p class="title">Panel 6: Communicating Science to a Polarized Public</p>
+              <details><summary>Speakers &amp; moderator</summary>
+                <ul class="people">
+                  <li>Stephanie M. Lee, Sr. Writer, <em>Chronicle of Higher Education</em></li>
+                  <li>Brad Wible, Commentary editor for <em>Science</em></li>
+                  <li>Lisa Jarvis, Columnist at Bloomberg</li>
+                  <li>Gordon Gauchat, Associate Professor, University of Wisconsin‑Milwaukee</li>
+                  <li><em>Moderator:</em> Jessica Love</li>
+                </ul>
+              </details>
+            </div></div>
+            <div class="slot"><div class="time">12:15–1:00</div><div><p class="title">Lunch</p></div></div>
+          </div>
+        </div>
+      </div>
+      <p class="tiny" style="margin-top:.75rem">Times and speakers subject to change.</p>
+    </section>
+
+    <section id="speakers" aria-labelledby="speakers-h2">
+      <h2 id="speakers-h2">Speakers &amp; Moderators (A–Z)</h2>
+      <div class="grid">
+        <article class="card"><img src="assets/headshots/stuart-buck.jpg" alt="Headshot of Stuart Buck"><h3>Stuart Buck</h3><p class="muted">Executive Director, Good Science Project</p></article>
+        <article class="card"><img src="assets/headshots/matt-clancy.jpg" alt="Headshot of Matt Clancy"><h3>Matt Clancy</h3><p class="muted">Senior Program Officer, Abundance &amp; Growth Fund, Open Philanthropy</p></article>
+        <article class="card"><img src="assets/headshots/heather-douglas.jpg" alt="Headshot of Heather Douglas"><h3>Heather Douglas</h3><p class="muted">Professor, Michigan State University</p></article>
+        <article class="card"><img src="assets/headshots/james-evans.jpg" alt="Headshot of James Evans"><h3>James Evans</h3><p class="muted">Max Palevsky Professor; Director, Knowledge Lab, University of Chicago</p></article>
+        <article class="card"><img src="assets/headshots/ej-fagan.jpg" alt="Headshot of E.J. Fagan"><h3>E.J. Fagan</h3><p class="muted">Associate Professor, University of Illinois Chicago</p></article>
+        <article class="card"><img src="assets/headshots/gordon-gauchat.jpg" alt="Headshot of Gordon Gauchat"><h3>Gordon Gauchat</h3><p class="muted">University of Wisconsin–Milwaukee</p></article>
+        <article class="card"><img src="assets/headshots/david-goldston.jpg" alt="Headshot of David Goldston"><h3>David Goldston</h3><p class="muted">Director, MIT Washington Office</p></article>
+        <article class="card"><img src="assets/headshots/daniel-goroff.jpg" alt="Headshot of Daniel Goroff"><h3>Daniel Goroff</h3><p class="muted">Vice President, Alfred P. Sloan Foundation</p></article>
+        <article class="card"><img src="assets/headshots/yasheng-huang.jpg" alt="Headshot of Yasheng Huang"><h3>Yasheng Huang</h3><p class="muted">Professor, MIT Sloan School of Management</p></article>
+        <article class="card"><img src="assets/headshots/ben-jones.jpg" alt="Headshot of Ben Jones"><h3>Ben Jones</h3><p class="muted">Gordon &amp; Llura Gund Family Professor; Professor of Strategy, Kellogg (Moderator)</p></article>
+        <article class="card"><img src="assets/headshots/lisa-jarvis.jpg" alt="Headshot of Lisa Jarvis"><h3>Lisa Jarvis</h3><p class="muted">Columnist, Bloomberg</p></article>
+        <article class="card"><img src="assets/headshots/ann-keller.jpg" alt="Headshot of Ann Keller"><h3>Ann Keller</h3><p class="muted">Associate Professor, UC Berkeley</p></article>
+        <article class="card"><img src="assets/headshots/kei-koizumi.jpg" alt="Headshot of Kei Koizumi"><h3>Kei Koizumi</h3><p class="muted">Former Principal Deputy Director for Policy, OSTP</p></article>
+        <article class="card"><img src="assets/headshots/jari-kuusisto.jpg" alt="Headshot of Jari H. Kuusisto"><h3>Jari H. Kuusisto</h3><p class="muted">Visiting Scholar, MIT Sloan</p></article>
+        <article class="card"><img src="assets/headshots/stephanie-lee.jpg" alt="Headshot of Stephanie M. Lee"><h3>Stephanie M. Lee</h3><p class="muted">Sr. Writer, Chronicle of Higher Education</p></article>
+        <article class="card"><img src="assets/headshots/erik-nisbet.jpg" alt="Headshot of Erik Nisbet"><h3>Erik Nisbet</h3><p class="muted">Owen L. Coon Endowed Professor; Director, Center for Communication &amp; Public Policy, Northwestern</p></article>
+        <article class="card"><img src="assets/headshots/brian-nosek.jpg" alt="Headshot of Brian Nosek"><h3>Brian Nosek</h3><p class="muted">Co‑founder &amp; Executive Director, Center for Open Science; Professor, UVA</p></article>
+        <article class="card"><img src="assets/headshots/jason-owensmith.jpg" alt="Headshot of Jason Owen‑Smith"><h3>Jason Owen Smith</h3><p class="muted">Assoc. VP for Research; Professor, University of Michigan</p></article>
+        <article class="card"><img src="assets/headshots/julia-park.jpg" alt="Headshot of Ju Yeon (Julia) Park"><h3>Ju Yeon (Julia) Park</h3><p class="muted">Associate Professor, The Ohio State University</p></article>
+        <article class="card"><img src="assets/headshots/nancy-qian.jpg" alt="Headshot of Nancy Qian"><h3>Nancy Qian</h3><p class="muted">Professor, Kellogg</p></article>
+        <article class="card"><img src="assets/headshots/pin-ni.jpg" alt="Headshot of Pin Ni"><h3>Pin Ni</h3><p class="muted">President, Wanxiang America (Moderator)</p></article>
+        <article class="card"><img src="assets/headshots/peter-schiffer.jpg" alt="Headshot of Peter Schiffer"><h3>Peter Schiffer</h3><p class="muted">Dean for Research, Princeton University</p></article>
+        <article class="card"><img src="assets/headshots/bhavan-sampat.jpg" alt="Headshot of Bhavan Sampat"><h3>Bhavan Sampat</h3><p class="muted">Professor, Johns Hopkins University</p></article>
+        <article class="card"><img src="assets/headshots/molly-roberts.jpg" alt="Headshot of Molly Roberts"><h3>Molly Roberts</h3><p class="muted">Professor, UC San Diego</p></article>
+        <article class="card"><img src="assets/headshots/elizabeth-suhay.jpg" alt="Headshot of Elizabeth Suhay"><h3>Elizabeth Suhay</h3><p class="muted">Associate Professor, American University</p></article>
+        <article class="card"><img src="assets/headshots/kaye-husbandsfealing.jpg" alt="Headshot of Kaye Husbands Fealing"><h3>Kaye Husbands Fealing</h3><p class="muted">Assistant Director for SBE, NSF</p></article>
+        <article class="card"><img src="assets/headshots/toby-smith.jpg" alt="Headshot of Toby Smith"><h3>Toby Smith</h3><p class="muted">Senior VP, AAU</p></article>
+        <article class="card"><img src="assets/headshots/kristen-lunztrujillo.jpg" alt="Headshot of Kristen Lunz Trujillo"><h3>Kristen Lunz Trujillo</h3><p class="muted">Assistant Professor, Boston College</p></article>
+        <article class="card"><img src="assets/headshots/jevin-west.jpg" alt="Headshot of Jevin West"><h3>Jevin West</h3><p class="muted">Associate Dean for Research, University of Washington</p></article>
+        <article class="card"><img src="assets/headshots/brad-wible.jpg" alt="Headshot of Brad Wible"><h3>Brad Wible</h3><p class="muted">Commentary editor, <em>Science</em></p></article>
+        <article class="card"><img src="assets/headshots/jessica-love.jpg" alt="Headshot of Jessica Love"><h3>Jessica Love</h3><p class="muted">Moderator</p></article>
+        <article class="card"><img src="assets/headshots/arthur-lupia.jpg" alt="Headshot of Arthur Lupia"><h3>Arthur Lupia</h3><p class="muted">Gerald R. Ford University Professor; VP for Research &amp; Innovation, University of Michigan</p></article>
+        <article class="card"><img src="assets/headshots/mary-mcgrath.jpg" alt="Headshot of Mary McGrath"><h3>Mary McGrath</h3><p class="muted">Assistant Professor, Northwestern University</p></article>
+        <article class="card"><img src="assets/headshots/adam-zelizer.jpg" alt="Headshot of Adam Zelizer"><h3>Adam Zelizer</h3><p class="muted">Assistant Professor, University of Chicago</p></article>
+      </div>
+      <p class="tiny">Place photos in <code>assets/headshots/</code> (lowercase, hyphenated filenames). Alt text included for accessibility.</p>
+    </section>
+
+    <section id="venue" aria-labelledby="venue-h2">
+      <h2 id="venue-h2">Venue &amp; Logistics</h2>
+      <div class="venue">
+        <div>
+          <p><strong>Kellogg School of Management</strong><br/>Northwestern University, Evanston, IL</p>
+          <ul>
+            <li>Primary sessions held on the Evanston campus (exact rooms TBA).</li>
+            <li>Dinner: Evanston Corner Bistro (off‑site).</li>
+            <li>Accessibility: Please contact us for any accommodations.</li>
+          </ul>
+        </div>
+        <iframe class="map" title="Map to Kellogg School of Management" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2969.286015096614!2d-87.676!3d42.057!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880fcf6e3f6a0e7f%3A0x7d4b1d7b0e5f6f9!2sKellogg%20School%20of%20Management!5e0!3m2!1sen!2sus!4v0000000000"></iframe>
+      </div>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-h2">
+      <h2 id="contact-h2">Contact</h2>
+      <p class="tiny">Questions or updates? Email <a href="mailto:cssi-events@kellogg.northwestern.edu">cssi-events@kellogg.northwestern.edu</a>.</p>
+    </section>
+
+    <footer class="container">
+      <p class="tiny">Hosted by the Center for Science of Science &amp; Innovation and the Ryan Institute on Complexity at Northwestern University.</p>
+    </footer>
+  </main>
+</body>
+</html>
